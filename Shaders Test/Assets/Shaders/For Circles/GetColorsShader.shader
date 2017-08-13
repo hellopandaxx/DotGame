@@ -51,16 +51,6 @@
 				int col = IN.vertex.x;// / d;
 				int row = IN.vertex.y;// / d;
 
-				/*for (int i = 0; i < d; i++)
-				{
-					for (int j = 0; j < d; j++)
-					{
-							
-					}
-				}*/
-
-				//fixed4 color = tex2D(_MainTex, IN.uv);
-
 				if ((col + row) % 2 == 0)
 				{
 					return 1;
@@ -69,8 +59,6 @@
 				{
 					return 0;
 				}
-
-				//return color;
 			}
 			ENDCG
 		}

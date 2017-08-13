@@ -1,24 +1,21 @@
 ﻿Shader "Custom/Circle1AA"
 {
-	Properties{
+	Properties {
 		_MainTex("Texture", 2D) = "white" {}
 		_ColorMap("Texture", 2D) = "white" {}
 
+		//[HideInInspector]
 		_Color("Color", Color) = (1,0,0,0)
 		_BackColor("Background Color", Color) = (0,0,0,1)
 
 		_Radius("Radius", Range(0.0, 100)) = 100
 		_Dropoff("Dropoff", Range(0.01, 4)) = 0.1
 
-			//_X("X", float) = 1;
-
-		/*[HideInInspector]
-		_Col*///ors("",2D) = "white" {}
-	}
-		SubShader{
+            }
+		SubShader {
 		Cull Off ZWrite Off ZTest Always
 
-		Pass
+		Pass // Make Black Background
 	{
 			CGPROGRAM
 	#pragma vertex vert
@@ -31,7 +28,7 @@
 			float4 vertex : POSITION;
 			float2 uv : TEXCOORD0;
 		};
-
+			  
 		struct v2f
 		{			
 			float2 uv : TEXCOORD0;
@@ -54,17 +51,11 @@
 		fixed4 frag(v2f i) : SV_Target
 		{
 			fixed4 col = tex2D(_MainTex, i.uv);
-		//col.rgb = 0;
-		// just invert the colors
-		//_Color1 = 1;
+			col.rgb = 0;
 
-		//fixed4 c [100];
-		col.rgb = 0;
-
-		//_colorArray[0].rgb = 0.5;
-
-		return col;
+			return col;
 		}
+
 		ENDCG
 	}
 
@@ -115,7 +106,7 @@
 			return 1.0;
 		else
 			return (-pow(d - r, 2) / pow(p, 2)) + 1.0;
-	}
+    }
 
 	sampler2D _ColorMap;
 

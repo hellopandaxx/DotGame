@@ -38,23 +38,21 @@ public class PostEffect : MonoBehaviour
 
     }
 
-    public Material mat1;
-    public Material getColorsMat;
+    public Material getColorsMaterial;
+    public Material dotMaterial;
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        //RenderTexture stage1 = new RenderTexture(src.width, src.height, src.depth);
-
-        var c = new Color[32];
-        c[0] = Color.green;
-        mat1.SetColorArray("_colorArray", c);
+        //var c = new Color[32];
+        //c[0] = Color.green;
+        //dotMaterial.SetColorArray("_colorArray", c);
 
         // ===========================================================
 
         var screenWidth = Screen.width;
         var screenHeight = Screen.height;
 
-        var radius = mat1.GetInt("_Radius");
+        var radius =  dotMaterial.GetInt("_Radius");
 
         var d = radius * 2;
 
@@ -70,11 +68,11 @@ public class PostEffect : MonoBehaviour
         
         //mat1.SetColorArray
 
-        Graphics.Blit(src, tex, getColorsMat);
+        Graphics.Blit(src, tex, getColorsMaterial);
 
-        mat1.SetTexture("_ColorMap", tex);
+         dotMaterial.SetTexture("_ColorMap", tex);
 
-        Graphics.Blit(src, dest, mat1);
+        Graphics.Blit(src, dest, dotMaterial);
         RenderTexture.ReleaseTemporary(tex);
 
         // (this.GetComponent("Material") as Material).SetColorArray; !!!
