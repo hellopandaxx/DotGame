@@ -8,7 +8,7 @@
 		_Color("Color", Color) = (1,0,0,0)
 		_BackColor("Background Color", Color) = (0,0,0,1)
 
-		_Radius("Radius", Range(0.0, 100)) = 100
+		_Radius("Radius", Range(1, 100)) = 100
 		_Dropoff("Dropoff", Range(0.01, 4)) = 0.1
 
             }
@@ -115,6 +115,10 @@
 		float d = _Radius * 2;
 		int col = i.pos.x / d;
 		int row = i.pos.y / d;
+/*
+		int colsCount = _ScreenParams.x / d;
+		int rowsCount = _ScreenParams.y / d;
+		*/
 
 		float centerX = col * d + _Radius; //_ScreenParams.x / 2;
 		float centerY = row * d + _Radius; //_ScreenParams.y / 2;
@@ -122,25 +126,10 @@
 		float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
 		fixed4 result = fixed4(_Color.r, _Color.g, _Color.b, _Color.a*antialias(_Radius, distance, _Dropoff));
 		
-		/*if ((col + row) % 2 == 0)
-		{
-			result.rgb = 1;
-		}
-		else
-		{
-			result.rgb = 1;
-		}*/
+		//result.rgb = tex2Dlod(_ColorMap, float4(col, row, 0, 0))*255;
 
-		//result.rgb = tex2Dlod(_ColorMap, float4(col, row, 0, 0))*255; //tex2D(_ColorMap, i.uv).rgb;//_colorArray[0].rgb;
-		result.rgb = tex2D(_ColorMap, i.uv).rgb;
+		result.rgb = tex2D(_ColorMap, /*fixed2(colsCount/col, rowsCount/row)*/ i.uv).rgb;
 		
-		/*if (result.a <= 0)
-		{
-			result = _BackColor;
-		}*/
-
-		//result.rgb = 0.5;	
-
 		return result;
 	}
 

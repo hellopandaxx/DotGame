@@ -56,21 +56,23 @@ public class PostEffect : MonoBehaviour
 
         var d = radius * 2;
 
-        var newx = screenWidth / d;
-        var newy = screenHeight / d;
+        var newx = screenWidth / d + 1;
+        var newy = screenHeight / d + 1;
 
 
         var tex = RenderTexture.GetTemporary(newx, newy);
         tex.antiAliasing = 1;
-        tex.depth = 24;
+        // tex.depth = 24;
         //tex.enableRandomWrite = true;
-        Texture2D tex2d = new Texture2D(newx, newy, TextureFormat.RGBA32, false);
+        // Texture2D tex2d = new Texture2D(newx, newy, TextureFormat.RGBA32, false);
         
         //mat1.SetColorArray
 
         Graphics.Blit(src, tex, getColorsMaterial);
 
          dotMaterial.SetTexture("_ColorMap", tex);
+    
+         // dotMaterial.SetInt ...
 
         Graphics.Blit(src, dest, dotMaterial);
         RenderTexture.ReleaseTemporary(tex);
