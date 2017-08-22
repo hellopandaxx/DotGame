@@ -25,7 +25,7 @@ public class PostEffect : MonoBehaviour
         return (int)Mathf.Pow(2, Mathf.Ceil(Mathf.Log(n) / Mathf.Log(2)));
     }*/
 
-    
+
     // Use this for initialization
     void Start()
     {
@@ -38,21 +38,50 @@ public class PostEffect : MonoBehaviour
 
     }
 
+    /*
+    void OnRenderImage(RenderTexture src, RenderTexture dest)
+    {
+        //  RenderTexture.active = src;
+        //  Texture2D myTexture2D = new Texture2D(src.width, src.height);
+        //  myTexture2D.ReadPixels(new Rect(0, 0, myTexture2D.width, myTexture2D.height), 0, 0);
+        //  RenderTexture.active = null;
+
+        //  myTexture2D.Apply();
+        //  var pixels = myTexture2D.GetPixels();
+           
+    }
+    */
+
     public Material getColorsMaterial;
     public Material dotMaterial;
 
+    public const int screenHeigthInDots = 30;
+
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        //var c = new Color[32];
-        //c[0] = Color.green;
-        //dotMaterial.SetColorArray("_colorArray", c);
+        var screenHeight = Screen.height; // TODO: Optimize
+        int d = screenHeight / screenHeigthInDots;
 
-        // ===========================================================
+        int screenWidthInDots = Screen.width / d;
 
+        var tex = RenderTexture.GetTemporary(screenWidthInDots, screenHeigthInDots);
+        tex.antiAliasing = 1;
+        Graphics.Blit(src, tex); // Down scale (get colors emulation)
+
+        dotMaterial.SetTexture("_ColorMap", tex);
+        dotMaterial.SetInt("_D", d);
+        dotMaterial.SetInt("_Radius", d / 2);
+        Graphics.Blit(src, dest, dotMaterial);
+        //Graphics.Blit(tex, dest);
+        RenderTexture.ReleaseTemporary(tex);
+    }
+
+    void OnRenderImageOLD(RenderTexture src, RenderTexture dest)
+    {
         var screenWidth = Screen.width;
         var screenHeight = Screen.height;
 
-        var radius =  dotMaterial.GetInt("_Radius");
+        var radius = dotMaterial.GetInt("_Radius");
 
         var d = radius * 2;
 
@@ -65,14 +94,14 @@ public class PostEffect : MonoBehaviour
         // tex.depth = 24;
         //tex.enableRandomWrite = true;
         // Texture2D tex2d = new Texture2D(newx, newy, TextureFormat.RGBA32, false);
-        
+
         //mat1.SetColorArray
 
         Graphics.Blit(src, tex, getColorsMaterial);
 
-         dotMaterial.SetTexture("_ColorMap", tex);
-    
-         // dotMaterial.SetInt ...
+        dotMaterial.SetTexture("_ColorMap", tex);
+
+        // dotMaterial.SetInt ...
 
         Graphics.Blit(src, dest, dotMaterial);
         RenderTexture.ReleaseTemporary(tex);
