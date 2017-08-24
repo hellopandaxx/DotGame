@@ -1,5 +1,11 @@
 # README #
 
+### Important links ###
+_MainTex_TexelSize 
+https://forum.unity3d.com/threads/_maintex_texelsize-whats-the-meaning.110278/
+https://docs.unity3d.com/Manual/SL-PropertiesInPrograms.html
+
+
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
