@@ -40,7 +40,7 @@ public class CameraScript : MonoBehaviour {
     //}
 
     public GameObject target;//the target object
-    private float speedMod = 3.0f;//a speed modifier
+    public float speedMod = 3.0f;//a speed modifier
     private Vector3 point;//the coord to the point where the camera looks at
 
     private float delta = 0f;
