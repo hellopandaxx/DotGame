@@ -60,17 +60,19 @@ public class PostEffect : MonoBehaviour
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
         var screenHeight = Screen.height; // TODO: Optimize
-        int d = screenHeight / screenHeigthInDots;
+        float d = screenHeight / screenHeigthInDots;
 
-        int screenWidthInDots = Screen.width / d;
+        int screenWidthInDots = Screen.width / (int)d;
 
         var tex = RenderTexture.GetTemporary(screenWidthInDots, screenHeigthInDots);
-        tex.antiAliasing = 1;
+        //tex.antiAliasing = 1;
         Graphics.Blit(src, tex); // Down scale (get colors emulation)
 
         dotMaterial.SetTexture("_ColorMap", tex);
-        dotMaterial.SetInt("_D", d);
-        dotMaterial.SetInt("_Radius", d / 2);
+        dotMaterial.SetFloat("_D", d);
+        dotMaterial.SetFloat("_Radius", d / 2);
+        dotMaterial.SetInt("_DotsWidth", screenWidthInDots);
+        dotMaterial.SetInt("_DotsHeight", screenHeigthInDots);
         Graphics.Blit(src, dest, dotMaterial);
         //Graphics.Blit(tex, dest);
         RenderTexture.ReleaseTemporary(tex);

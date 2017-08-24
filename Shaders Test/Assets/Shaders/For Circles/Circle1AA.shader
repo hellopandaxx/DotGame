@@ -8,9 +8,12 @@
 		_Color("Color", Color) = (1,0,0,0)
 		_BackColor("Background Color", Color) = (0,0,0,1)
 
-		_D("D", int) = 40
-			_Radius("Radius", int) = 20
+		_D("D", float) = 40
+	    _Radius("Radius", float) = 20
 		_Dropoff("Dropoff", Range(0.01, 4)) = 0.1
+
+		_DotsWidth("DotsWidth", int) = 1
+		_DotsHeight("DotsHeight", int) = 1
 
 	}
 		SubShader {
@@ -118,6 +121,9 @@
 	sampler2D _ColorMap;
 	sampler2D _MainTex;
 
+	float _DotsWidth;
+	float _DotsHeight;
+
 	fixed4 frag(fragmentInput i) : SV_Target
 	{
 		float d = _D;
@@ -138,8 +144,19 @@
 		fixed4 result = fixed4(_Color.r, _Color.g, _Color.b, _Color.a*antialias(radius, distance, _Dropoff));
 
 		//result.rgb = tex2Dlod(_ColorMap, float4(col, row, 0, 0))*255;
+		
+		float2 position = float2((float)col/_DotsWidth, 1.0-(float)row/_DotsHeight);
+		result.rgb = tex2D(_ColorMap, position).rgb;
 
-		result.rgb = tex2D(_ColorMap, /*fixed2(colsCount/col, rowsCount/row)*/ float2(i.uv.x, 1-i.uv.y)).rgb;
+//int myDotH = _DotsHeight;
+//int myDotW = _DotsWidth;
+//if(col == myDotW && row == myDotH)
+//{
+// result.r = 1;
+// result.g = 0;
+// result.b = 0;
+//}
+		//result.rgb = tex2D(_ColorMap, /*fixed2(colsCount/col, rowsCount/row)*/ float2(i.uv.x, 1-i.uv.y)).rgb;
 
 		return result;
 	}
