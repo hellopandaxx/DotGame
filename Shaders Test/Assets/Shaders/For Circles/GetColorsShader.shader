@@ -51,7 +51,7 @@
 				int col = IN.vertex.x;// / d;
 				int row = IN.vertex.y;// / d;
 
-				if ((col + row) % 2 == 0)
+				if ((col + row) % 2 == 0) // TODO: use UINT
 				{
 					return 1;
 				}
