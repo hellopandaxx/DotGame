@@ -72,6 +72,7 @@ public class PostEffect : MonoBehaviour
         Debug.Log(tex.depth + " " + tex.depthBuffer + " " + tex.antiAliasing + " " + tex.anisoLevel);
         //tex.antiAliasing = 1;
         getColorsMaterial.SetFloat("_D", d);
+        getColorsMaterial.SetInt("_DotsHeight", SCREEN_HEIGHT_IN_DOTS);
         Graphics.Blit(src, tex, getColorsMaterial); // [ Down scale (get colors emulation) ]
 
         dotMaterial.SetTexture("_ColorMap", tex);
