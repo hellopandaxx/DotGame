@@ -86,7 +86,7 @@
 			};
 
 			struct fragmentInput {
-				float4 pos : SV_POSITION;
+				float4 pos : SV_POSITION; // - screen position
 				float2 uv : TEXTCOORD0;
 			};
 
@@ -123,6 +123,7 @@
 				float d = _D;
 				float radius = _D / 2;
 
+				// i.pos.x - coordinates in pixels??
 				int col = i.pos.x / d;
 				int row = i.pos.y / d;
 
@@ -132,7 +133,8 @@
 				float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
 				fixed4 result = fixed4(1, 1, 1, 1*antialias(radius, distance, _Dropoff));
 		
-				float2 position = float2((float)col/_DotsWidth, 1.0-(float)row/_DotsHeight);
+				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
+				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;
 
 				return result;

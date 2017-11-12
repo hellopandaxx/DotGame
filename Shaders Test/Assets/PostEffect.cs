@@ -66,9 +66,13 @@ public class PostEffect : MonoBehaviour
 
         int screenWidthInDots = Screen.width / (int)d;
 
-        var tex = RenderTexture.GetTemporary(screenWidthInDots, SCREEN_HEIGHT_IN_DOTS);
+        var tex = RenderTexture.GetTemporary(screenWidthInDots, SCREEN_HEIGHT_IN_DOTS/*, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default*/);
+        tex.filterMode = FilterMode.Point; /// !!!
+
+        Debug.Log(tex.depth + " " + tex.depthBuffer + " " + tex.antiAliasing + " " + tex.anisoLevel);
         //tex.antiAliasing = 1;
-        Graphics.Blit(src, tex); // Down scale (get colors emulation)
+        getColorsMaterial.SetFloat("_D", d);
+        Graphics.Blit(src, tex, getColorsMaterial); // [ Down scale (get colors emulation) ]
 
         dotMaterial.SetTexture("_ColorMap", tex);
         dotMaterial.SetFloat("_D", d);
