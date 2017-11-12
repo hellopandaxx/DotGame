@@ -76,7 +76,7 @@
 				{
 					for (int y = 0; y < _D; y++)
 					{
-						float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*TX_x*2);
+						float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*(-_MainTex_TexelSize.y)/*TX_x*2*/);
 						fixed4 pixColor = tex2D(_MainTex, position);
 
 						result += pixColor;
