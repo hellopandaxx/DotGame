@@ -9,6 +9,7 @@
 
 		// The diameter of one Dot.
 		_D("D", float) = 40
+		_DeltaD("DeltaD", float) = 0
 
 		// Antiallisassing drop-off.
 		_Dropoff("Dropoff", Range(0.01, 4)) = 0.1
@@ -118,6 +119,7 @@
 			float4 _MainTex_TexelSize;
 
 			float _D;
+			float _DeltaD;
 			float _Dropoff;
 			float _DotsWidth;
 			float _DotsHeight;
@@ -126,6 +128,7 @@
 			{
 				float d = _D;
 				float radius = _D / 2;
+				float internalRadius = (_D - _DeltaD) / 2;
 
 				// i.pos.x - coordinates in pixels??
 				int col = i.pos.x / d;
@@ -135,17 +138,22 @@
 				float centerY = row * d + radius;
 
 				float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
-				fixed4 result = fixed4(1, 1, 1, 1*antialias(radius, distance, _Dropoff));
+				fixed4 result = fixed4(1, 1, 1, 1*antialias(internalRadius, distance, _Dropoff));
 		
-				// Self screen testing.
-				if (i.pos.x > _MainTex_TexelSize.z / 2)
+				// Half screen testing.
+				/*if (i.pos.x > _MainTex_TexelSize.z / 2)
 				{
 					return tex2D(_MainTex, i.uv);
-				}
+				}*/
 
 				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
 				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;
+
+				if (row == 0 || row == _DotsHeight - 1)
+				{
+					result.rgb = 0;
+				}
 
 				return result;
 			}

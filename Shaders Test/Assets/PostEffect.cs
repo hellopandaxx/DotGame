@@ -77,6 +77,7 @@ public class PostEffect : MonoBehaviour
 
         dotMaterial.SetTexture("_ColorMap", tex);
         dotMaterial.SetFloat("_D", d);
+        //dotMaterial.SetFloat("_DeltaD", )
         dotMaterial.SetFloat("_Radius", d / 2);
         dotMaterial.SetInt("_DotsWidth", screenWidthInDots);
         dotMaterial.SetInt("_DotsHeight", SCREEN_HEIGHT_IN_DOTS);
