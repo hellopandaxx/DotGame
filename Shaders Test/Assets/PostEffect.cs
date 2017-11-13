@@ -62,14 +62,14 @@ public class PostEffect : MonoBehaviour
         var screenHeight = Screen.height; // TODO: Optimize (?)
         float d = (float)screenHeight / SCREEN_HEIGHT_IN_DOTS;
 
-        Debug.Log("D = " + d);
+        //Debug.Log("D = " + d);
 
         int screenWidthInDots = Screen.width / (int)d;
 
         var tex = RenderTexture.GetTemporary(screenWidthInDots, SCREEN_HEIGHT_IN_DOTS/*, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default*/);
         tex.filterMode = FilterMode.Point; /// !!!
 
-        Debug.Log(tex.depth + " " + tex.depthBuffer + " " + tex.antiAliasing + " " + tex.anisoLevel);
+        //Debug.Log(tex.depth + " " + tex.depthBuffer + " " + tex.antiAliasing + " " + tex.anisoLevel);
         //tex.antiAliasing = 1;
         getColorsMaterial.SetFloat("_D", d);
         getColorsMaterial.SetInt("_DotsHeight", SCREEN_HEIGHT_IN_DOTS);

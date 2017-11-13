@@ -113,6 +113,10 @@
 
 			sampler2D _ColorMap;
 
+			// Testing.
+			sampler2D _MainTex;
+			float4 _MainTex_TexelSize;
+
 			float _D;
 			float _Dropoff;
 			float _DotsWidth;
@@ -133,6 +137,12 @@
 				float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
 				fixed4 result = fixed4(1, 1, 1, 1*antialias(radius, distance, _Dropoff));
 		
+				// Self screen testing.
+				if (i.pos.x > _MainTex_TexelSize.z / 2)
+				{
+					return tex2D(_MainTex, i.uv);
+				}
+
 				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
 				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;

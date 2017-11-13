@@ -62,6 +62,7 @@
 				float4 result = 0;
 
 				float TX_x = _MainTex_TexelSize.x;
+				float TX_y = -_MainTex_TexelSize.y;
 
 				/*if ((col + row) % 2 == 0)
 				{
@@ -72,25 +73,49 @@
 					return 1;
 				}*/
 
-				for (int x = 0; x < _D; x++)
+				/*for (int x = 0; x < _D; x++)
 				{
 					for (int y = 0; y < _D; y++)
 					{
-						float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*(-_MainTex_TexelSize.y)/*TX_x*2*/);
+						float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*TX_y);
 						fixed4 pixColor = tex2D(_MainTex, position);
 
 						result += pixColor;
 					}
 				}
 
-				result /= _D*_D;
+				result /= _D*_D;*/
 
-				/*float2 position = float2(col*_D*TX_x, row*_D*TX_x);
-				fixed4 pixColor = tex2D(_MainTex, position);
-				return pixColor;*/
-				//fixed4 color = 1;
-				//color.rgb = TX_y*1000;
-				//return color;
+				//for (int x = 0; x < _D; x++)
+				//{
+				//	for (int y = 0; y < _D; y++)
+				//	{
+				//		if ((x + y) % 2 == 0) // Trying to make some optimization.
+				//		{
+				//			float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*TX_y);
+				//			fixed4 pixColor = tex2D(_MainTex, position);
+
+				//			result += pixColor;
+				//		}
+				//	}
+				//}
+
+				int pixCount = 0;
+				for (int x = 0; x < _D; x += 2)
+				{
+					for (int y = 0; y < _D; y += 2)
+					{
+						float2 position = float2((col*_D + x)*TX_x, (row*_D + y)*TX_y);
+						fixed4 pixColor = tex2D(_MainTex, position);
+
+						result += pixColor;
+						pixCount++;
+					}
+				}
+
+				//result /= _D*_D;
+
+				result /= (pixCount);
 
 				return result;
 			}
@@ -98,60 +123,9 @@
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				int col = IN.vertex.x;
-				int row = _DotsHeight - IN.vertex.y;
+				int row = _DotsHeight - IN.vertex.y;							
 
-				/*TX_x = _MainTex_TexelSize.x;
-				TX_y = _MainTex_TexelSize.y;*/
-
-
-				/*fixed4 color = 1;
-				color.rgb = 0;
-				color.r = IN.uv.y;
-				if(col == 1 || row == 1)
-				{
-					color.g = 0.5;
-				}*/
-				/*if(IN.vertex.y == 2)
-				{
-					color.g = 0.5;
-				}*/
-				//return color;
-
-				//return  tex2D(_MainTex, IN.uv);
-
-				/*if (col == 0 && row == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					return 1;
-				}*/
-
-				/*if ((col + row) % 2 == 0)
-				{
-				return 0;
-				}*/
-				/*else
-				{
-				return 1;
-				}*/
-
-				return getColorFromCell(col, row);
-				//fixed4 color = 1;
-				/*float TX_x = _MainTex_TexelSize.x;
-				float2 position = float2((float)col*_D*TX_x, row*_D*TX_x);
-				fixed4 pixColor = tex2D(_MainTex, position);
-				return pixColor;*/
-
-				/*if ((col + row) % 2 == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					return 1;
-				}*/
+				return getColorFromCell(col, row);				
 			}
 							
 			ENDCG
