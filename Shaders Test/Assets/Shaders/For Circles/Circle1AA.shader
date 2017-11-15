@@ -1,4 +1,6 @@
-﻿Shader "Custom/Circle1AA"
+﻿// Upgrade NOTE: replaced 'defined BLACKLINES' with 'defined (BLACKLINES)'
+
+Shader "Custom/Circle1AA"
 {
 	Properties{
 		// Original screen image (Currently not used)
@@ -17,6 +19,8 @@
 		// The dimensions of the screen in Dots.
 		_DotsWidth("DotsWidth", int) = 1
 		_DotsHeight("DotsHeight", int) = 1
+
+		_BlackLinesHeight("BlackLinesHeight", int) = 10
 
 
 		//[HideInInspector]
@@ -124,6 +128,8 @@
 			float _DotsWidth;
 			float _DotsHeight;
 
+			int _BlackLinesHeight;
+
 			fixed4 frag(fragmentInput i) : SV_Target
 			{
 				float d = _D;
@@ -149,8 +155,8 @@
 				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
 				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;
-
-				if (row == 0 || row == _DotsHeight - 1)
+				
+				if (row < _BlackLinesHeight-1 || row > _DotsHeight - _BlackLinesHeight)
 				{
 					result.rgb = 0;
 				}

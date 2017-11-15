@@ -54,33 +54,42 @@ public class PostEffect : MonoBehaviour
 
     public Material getColorsMaterial;
     public Material dotMaterial;
+    
+    [Range(5, 50)]
+    public int ScreenHeightInDots = 30;
 
-    public const int SCREEN_HEIGHT_IN_DOTS = 30;
+    [Range(0, 30)]
+    public int BlackLinesHeightInDots = 10;
+
+    public const int SCREEN_HEIGHT_IN_DOTS = 30; // + 22 + 22; // 30
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
+        var screenHeightInDots = ScreenHeightInDots;
+
         var screenHeight = Screen.height; // TODO: Optimize (?)
-        float d = (float)screenHeight / SCREEN_HEIGHT_IN_DOTS;
+        float d = (float)screenHeight / screenHeightInDots;
 
         //Debug.Log("D = " + d);
 
         int screenWidthInDots = Screen.width / (int)d;
 
-        var tex = RenderTexture.GetTemporary(screenWidthInDots, SCREEN_HEIGHT_IN_DOTS/*, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default*/);
+        var tex = RenderTexture.GetTemporary(screenWidthInDots, screenHeightInDots/*, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default*/);
         tex.filterMode = FilterMode.Point; /// !!!
 
         //Debug.Log(tex.depth + " " + tex.depthBuffer + " " + tex.antiAliasing + " " + tex.anisoLevel);
         //tex.antiAliasing = 1;
         getColorsMaterial.SetFloat("_D", d);
-        getColorsMaterial.SetInt("_DotsHeight", SCREEN_HEIGHT_IN_DOTS);
+        getColorsMaterial.SetInt("_DotsHeight", screenHeightInDots);
         Graphics.Blit(src, tex, getColorsMaterial); // [ Down scale (get colors emulation) ]
 
         dotMaterial.SetTexture("_ColorMap", tex);
         dotMaterial.SetFloat("_D", d);
         //dotMaterial.SetFloat("_DeltaD", )
+        dotMaterial.SetInt("_BlackLinesHeight", BlackLinesHeightInDots);
         dotMaterial.SetFloat("_Radius", d / 2);
         dotMaterial.SetInt("_DotsWidth", screenWidthInDots);
-        dotMaterial.SetInt("_DotsHeight", SCREEN_HEIGHT_IN_DOTS);
+        dotMaterial.SetInt("_DotsHeight", screenHeightInDots);
         Graphics.Blit(src, dest, dotMaterial);
         //Graphics.Blit(tex, dest);
         RenderTexture.ReleaseTemporary(tex);
