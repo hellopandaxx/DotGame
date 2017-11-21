@@ -65,6 +65,9 @@ public class PostEffect : MonoBehaviour
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
+        float phase = Mathf.Sin(Time.time);
+        Debug.Log(phase);
+
         var screenHeightInDots = ScreenHeightInDots;
 
         var screenHeight = Screen.height; // TODO: Optimize (?)
@@ -81,6 +84,7 @@ public class PostEffect : MonoBehaviour
         //tex.antiAliasing = 1;
         getColorsMaterial.SetFloat("_D", d);
         getColorsMaterial.SetInt("_DotsHeight", screenHeightInDots);
+        getColorsMaterial.SetFloat("_Phase", phase);
         Graphics.Blit(src, tex, getColorsMaterial); // [ Down scale (get colors emulation) ]
 
         dotMaterial.SetTexture("_ColorMap", tex);
@@ -90,6 +94,7 @@ public class PostEffect : MonoBehaviour
         dotMaterial.SetFloat("_Radius", d / 2);
         dotMaterial.SetInt("_DotsWidth", screenWidthInDots);
         dotMaterial.SetInt("_DotsHeight", screenHeightInDots);
+        //dotMaterial.SetFloat("_Phase", phase);
         Graphics.Blit(src, dest, dotMaterial);
         //Graphics.Blit(tex, dest);
         RenderTexture.ReleaseTemporary(tex);

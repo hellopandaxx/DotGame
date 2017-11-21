@@ -22,6 +22,8 @@ Shader "Custom/Circle1AA"
 
 		_BlackLinesHeight("BlackLinesHeight", int) = 10
 
+		_Phase("Phase", float) = 0
+
 
 		//[HideInInspector]
 		//_BackColor("Background Color", Color) = (0,0,0,1)
@@ -35,6 +37,7 @@ Shader "Custom/Circle1AA"
 		Pass // Makes Black Background
 		{
 			CGPROGRAM
+
 	#pragma vertex vert
 	#pragma fragment frag
 
@@ -59,15 +62,10 @@ Shader "Custom/Circle1AA"
 			o.uv = v.uv;
 			return o;
 		}
-
-		sampler2D _MainTex;
 		
 		fixed4 frag(v2f i) : SV_Target
 		{
-			fixed4 col = tex2D(_MainTex, i.uv);
-			col.rgb = 0;
-
-			return col;
+			return 0;
 		}
 
 		ENDCG
@@ -130,6 +128,8 @@ Shader "Custom/Circle1AA"
 
 			int _BlackLinesHeight;
 
+			float _Phase;
+
 			fixed4 frag(fragmentInput i) : SV_Target
 			{
 				float d = _D;
@@ -140,7 +140,7 @@ Shader "Custom/Circle1AA"
 				int col = i.pos.x / d;
 				int row = i.pos.y / d;
 
-				float centerX = col * d + radius;
+				float centerX = col * d + radius - (_Phase*d);
 				float centerY = row * d + radius;
 
 				float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
