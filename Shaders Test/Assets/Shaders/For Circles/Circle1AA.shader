@@ -137,26 +137,23 @@ Shader "Custom/Circle1AA"
 				float internalRadius = (_D - _DeltaD) / 2;
 
 				// i.pos.x - coordinates in pixels??
-				//int col = i.pos.x / d;
-				//_Phase = 0;
 				int col = (i.pos.x - _Phase*d) / d;
 				int row = i.pos.y / d;
 
-				// float centerX = col * d + radius - (_Phase*d);
-				float centerX = col * d + radius +(_Phase*d);
+				float centerX = col * d + radius + (_Phase*d);
 				float centerY = row * d + radius;
 
 				float distance = sqrt(pow(centerX - i.pos.x, 2) + pow(centerY - i.pos.y, 2));
 				fixed4 result = fixed4(1, 1, 1, 1*antialias(internalRadius, distance, _Dropoff));
 		
 				// Half screen testing.
-				if (i.pos.x > _MainTex_TexelSize.z / 2)
+				/*if (i.pos.x > _MainTex_TexelSize.z / 2)
 				{
 					return tex2D(_MainTex, i.uv);
-				}
+				}*/
 
 				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
-				float2 position = float2(col / _DotsWidth /*- (_Phase * )*/, 1.0 - (row + 1) / _DotsHeight);
+				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;
 				
 				if (row < _BlackLinesHeight-1 || row > _DotsHeight - _BlackLinesHeight)

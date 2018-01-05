@@ -65,17 +65,21 @@ public class PostEffect : MonoBehaviour
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        float phase = -Mathf.Abs(Mathf.Sin(Time.time)) % 1;
-        //float phase = -Time.time % 1;
+        //float phase = -Mathf.Abs(Mathf.Sin(Time.time));
+
+        //float position = MyGlobalSpeedController.SharedInstance.speed;
 
 
+
+        
         //transform.position = transform.position + new Vector3(phase, 0, 0);
-        Debug.Log(phase);
 
         var screenHeightInDots = ScreenHeightInDots;
 
         var screenHeight = Screen.height; // TODO: Optimize (?)
         float d = (float)screenHeight / screenHeightInDots;
+        float phase = -(MyGlobalSpeedController.SharedInstance.position *108)%d/d; //-(position*10)%1; //-Time.time % 1;
+        Debug.Log(/*"Position: " + position +*/ " Phase:" + phase);
 
         //Debug.Log("D = " + d);
 

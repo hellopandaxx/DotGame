@@ -59,10 +59,17 @@ public class CameraScript : MonoBehaviour {
         //transform.RotateAround(point, new Vector3(0.0f, -1.0f, 0.0f), 20 * 0.05f /*delta*/ * speedMod);
         //delta += 0.01f;
 
-        //float phase = Mathf.Sin(Time.time);
-        float phase = Mathf.Abs(Mathf.Sin(Time.time)) % 1;
+        // Pase is value between 0 and 1
+        //float phase = Mathf.Abs(Mathf.Sin(Time.time));
+        float phase = Time.deltaTime % 1;
 
-        transform.position = startPosition + new Vector3(phase/10, 0, 0);
+        var delta = speedMod * Time.deltaTime; //phase / 10;
+        Debug.Log("Delta=" + delta + ". Delta x100= " + delta*100);
+
+
+        transform.position += new Vector3(delta, 0, 0);
+        MyGlobalSpeedController.SharedInstance.position = transform.position.x;
+        //transform.position = startPosition + new Vector3(phase / 10, 0, 0);
 
     }
 }
