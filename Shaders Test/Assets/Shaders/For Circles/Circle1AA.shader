@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced 'defined BLACKLINES' with 'defined (BLACKLINES)'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced 'defined BLACKLINES' with 'defined (BLACKLINES)'
 
 Shader "Custom/Circle1AA"
 {
@@ -58,7 +60,7 @@ Shader "Custom/Circle1AA"
 		v2f vert(appdata v)
 		{
 			v2f o;
-			o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+			o.vertex = UnityObjectToClipPos(v.vertex);
 			o.uv = v.uv;
 			return o;
 		}
@@ -97,7 +99,7 @@ Shader "Custom/Circle1AA"
 			{
 				fragmentInput o;
 
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv; //v.texcoord.xy;// -fixed2(0.5, 0.5);
 
 				return o;
@@ -152,8 +154,13 @@ Shader "Custom/Circle1AA"
 					return tex2D(_MainTex, i.uv);
 				}*/
 
-				// I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
-				float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
+                
+                 
+                 // I use (row + 1) here in order to prevent the first and second lines from displaying the same colors.
+                 // /*1.0 -*/ should be added for D3D and removed for Mac.
+                 // This flips the image vertically.
+                 //float2 position = float2(col / _DotsWidth, 1.0 - (row + 1) / _DotsHeight);
+                float2 position = float2(col / _DotsWidth, /*1.0 -*/ (row + 1) / _DotsHeight);
 				result.rgb = tex2D(_ColorMap, position).rgb;
 				
 				if (row < _BlackLinesHeight-1 || row > _DotsHeight - _BlackLinesHeight)
@@ -199,10 +206,10 @@ Shader "Custom/Circle1AA"
 
 
 
-		// Basic function:
-		// r = radius
-		// d = distance
-		// t = thickness
+        // Basic function:
+        // r = radius
+        // d = distance
+        // t = thickness
 		// p = % thickness used for Dropoff
 		/*float antialias(float r, float d, float t, float p) {
 			if (d < (r - 0.5*t))

@@ -1,4 +1,6 @@
-﻿Shader "Custom/GetColorsShader"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/GetColorsShader"
 {
 	Properties
 	{
@@ -45,7 +47,7 @@
 			v2f vert(appdata v)
 			{
 				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
 				o.color = v.color;
 				return o;
@@ -64,7 +66,12 @@
 				float4 result = 0;
 
 				float TX_x = _MainTex_TexelSize.x;
-				float TX_y = -_MainTex_TexelSize.y;
+                
+                // Is it that thing about texel size revert in D3D? -> Yes.
+                // For D3D we use _MainTex_TexelSize.y with minus (negative).
+                // For Mac we use _MainTex_TexelSize.y as is.
+				//float TX_y = -_MainTex_TexelSize.y;  // For D3D.
+                float TX_y = _MainTex_TexelSize.y;
 				
 				int pixCount = 0;
 				for (int x = 0; x < _D; x += 2)
